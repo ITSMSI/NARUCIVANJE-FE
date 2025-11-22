@@ -43,7 +43,7 @@ const LoginPage = ({ updateToken }) => {
         // OVO JE KLJUČNO – čistimo sve staro i čuvamo tačno ono što treba
         localStorage.clear();
         localStorage.setItem("token", token);
-        localStorage.setItem("role", role);        // ← OVO SMO DODALI
+        localStorage.setItem("role", data.role);
         updateToken(token);
 
         // Odmah idemo gde treba
