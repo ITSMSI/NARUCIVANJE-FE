@@ -11,12 +11,10 @@ const LoginPage = ({ updateToken }) => {
   const [emailError, setEmailError] = useState("");
 
   const navigate = useNavigate();
-
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setEmailError("");
     setErrorMessage("");
     setPoljaError("");
@@ -25,65 +23,58 @@ const LoginPage = ({ updateToken }) => {
       setEmailError("Unesite validnu email adresu.");
       return;
     }
-
     if (!email || !password) {
       setPoljaError("Sva polja moraju biti popunjena.");
       return;
     }
 
-    const userData = { email, password };
-
     try {
-      // FIXED #1: correct endpoint (your backend has /api/auth/login)
       const response = await fetch("https://www.naruci.co.rs/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        // FIXED #2: your new backend returns { token: "eyJ..." }
-        const token = data.token;
+        // OVDE JE KLJUČ – backend vraća accessToken!
+        const token = data.accessToken;
 
-        // Save token the way your app expects
+        // Brišemo sve staro i čuvamo samo ispravan token
+        localStorage.clear();
         localStorage.setItem("token", token);
-        updateToken(token);                     // your original prop
-        // FIXED #3: safe jwt decode – no crash even if token is malformed
-        let decodedToken;
+        updateToken(token);
+
+        // Sigurno dekodiranje
+        let role = "ROLE_USER";
         try {
-          decodedToken = jwtDecode(token);
+          const decoded = jwtDecode(token);
+          role = decoded.role || "ROLE_USER";
         } catch (err) {
-          console.warn("Token decode failed (will use default route)", err);
-          decodedToken = { role: "ROLE_USER" }; // fallback
+          console.warn("Token ne može da se dekodira – koristimo fallback");
         }
 
-        // FIXED #4: role name exactly as backend sends it
-        if (decodedToken.role === "ROLE_ADMIN" || decodedToken.role === "ADMIN") {
+        // Redirekcija
+        if (role === "ROLE_ADMIN") {
           navigate("/admin");
         } else {
           navigate("/meni");
         }
       } else {
-        setErrorMessage(data.message || data.error || "Pogrešni podaci za prijavu.");
+        setErrorMessage(data.message || "Pogrešan email ili lozinka");
       }
     } catch (error) {
-      console.error("Greška prilikom slanja:", error);
-      setErrorMessage("Vaš nalog trenutno nije aktivan ili je došlo do greške.");
+      setErrorMessage("Server nije dostupan");
     }
   };
 
   return (
     <div className="vh-100 d-flex">
-      {/* Leva strana */}
       <div className="col-md-5 d-none d-md-block">
-        <div
-          className="h-100 bg-white opacity-75"
-          style={{ backgroundImage: "url('/slike/login.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
+        <div className="h-100 bg-white opacity-75" style={{ backgroundImage: "url('/slike/login.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
       </div>
 
-      {/* Desna strana */}
       <div className="col-md-7 d-flex align-items-center justify-content-center">
         <div className="w-70">
           <h2 className="text-center fw-bold" style={{ color: "#424242", fontFamily: "Montserrat", fontSize: 28 }}>Dobrodošli!</h2>
@@ -91,11 +82,7 @@ const LoginPage = ({ updateToken }) => {
 
           <p className="text-center mt-5" style={{ color: "#9E9E9E", fontFamily: "Montserrat", fontSize: 18 }}>
             Zaboravili ste lozinku?{" "}
-            <button
-              onClick={() => navigate("/lozinka")}
-              className="btn p-0 fw-bold"
-              style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }}
-            >
+            <button onClick={() => navigate("/lozinka")} className="btn p-0 fw-bold" style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }}>
               Promenite je ovde
             </button>
           </p>
@@ -107,37 +94,26 @@ const LoginPage = ({ updateToken }) => {
             <div className="mb-3 mt-4">
               <input type="email" className="form-control" placeholder="Unesite vaš email"
                 style={{ fontFamily: "Montserrat", fontSize: 14, height: 41 }}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={email} onChange={(e) => setEmail(e.target.value)}
               />
               {emailError && <div className="text-danger">{emailError}</div>}
             </div>
-            <div className="mb-3 ">
-              <input
-                type="password" className="form-control" placeholder="Unesite vašu lozinku"
+            <div className="mb-3">
+              <input type="password" className="form-control" placeholder="Unesite vašu lozinku"
                 style={{ fontFamily: "Montserrat", fontSize: 14, height: 41 }}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                value={password} onChange={(e) => setPassword(e.target.value)}
               />
               {poljaError && <div className="text-danger">{poljaError}</div>}
             </div>
-            <button
-              type="submit"
-              className="btn w-100 mb-5 fw-bold"
+            <button type="submit" className="btn w-100 mb-5 fw-bold"
               style={{ backgroundColor: "#486F5B", color: "white", fontFamily: "Montserrat", fontSize: 18 }}>
               Prijavi se
             </button>
-            {errorMessage && (
-              <div className="alert alert-danger mt-3">
-                <strong>Greška: </strong> {errorMessage}
-              </div>
-            )}
+            {errorMessage && <div className="alert alert-danger mt-3"><strong>Greška: </strong>{errorMessage}</div>}
           </form>
 
-          <button
-            onClick={() => navigate("/")}
-            className="btn w-100 p-0 fw-bold mt-5"
-            style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }} >
+          <button onClick={() => navigate("/")} className="btn w-100 p-0 fw-bold mt-5"
+            style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }}>
             ← Vrati se na početnu stranicu
           </button>
         </div>

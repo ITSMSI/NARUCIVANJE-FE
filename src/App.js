@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
@@ -25,15 +24,27 @@ function App() {
 
   useEffect(() => {
     if (token) {
-      const decodedToken = jwtDecode(token);
-      setUserRole(decodedToken.role);
+      try {
+        // THIS IS THE ONLY CHANGE – safe jwtDecode with try/catch
+        const decodedToken = jwtDecode(token);
+        setUserRole(decodedToken.role || "");
+      } catch (error) {
+        console.warn("Invalid or corrupted token – clearing it", error);
+        localStorage.removeItem("token");
+        setToken(null);
+        setUserRole("");
+      }
     } else {
       setUserRole("");
     }
   }, [token]);
 
   const updateToken = (newToken) => {
-    localStorage.setItem("token", newToken);
+    if (newToken) {
+      localStorage.setItem("token", newToken);
+    } else {
+      localStorage.removeItem("token");
+    }
     setToken(newToken);
   };
 
@@ -42,7 +53,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage updateToken={updateToken}/>} />
+          <Route path="/login" element={<LoginPage updateToken={updateToken} />} />
           <Route path="/lozinka" element={<LozinkaPage />} />
           <Route path="/reset-password" element={<PromenaLozinke />} />
           <Route path="/meni" element={<ProtectedRoute allowedRoles={['ROLE_USER']} userRole={userRole}><MeniPage /></ProtectedRoute>} />
@@ -56,12 +67,8 @@ function App() {
           <Route path="/admin/lokacije" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminLokacije /></ProtectedRoute>} />
           <Route path="/admin/kompanije" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminKompanije /></ProtectedRoute>} />
 
-          {/* Ruta za Not Authorized */}
           <Route path="/not-authorized" element={<NotAuthorizedPage />} />
-
-          {/* Fallback ruta za nepostojeće stranice */}
           <Route path="*" element={<NePostojiPage />} />
-        
         </Routes>
       </Router>
     </div>
