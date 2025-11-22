@@ -47,7 +47,7 @@ const AdminPregled = () => {
     // Fetch kompanija iz baze
     const fetchCompanies = async () => {
         try {
-            const response = await fetch("https://naruci.co.rs/api/v1/kompanija/get/all", {
+            const response = await fetch("http://127.0.0.1:8080/api/v1/kompanija/get/all", {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -63,7 +63,7 @@ const AdminPregled = () => {
     // Fetch lokacija kada korisnik odabere kompaniju
     const fetchLocations = async (kompanijaId) => {
         try {
-            const response = await fetch(`https://naruci.co.rs/api/v1/lokacija/get/kompanija/${kompanijaId}`, {
+            const response = await fetch(`http://127.0.0.1:8080/api/v1/lokacija/get/kompanija/${kompanijaId}`, {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -105,7 +105,7 @@ const AdminPregled = () => {
         if (selectedLocation) params.append("lokacijaId", selectedLocation);
         try {
 
-            const response = await fetch(`https://naruci.co.rs/api/v1/porudzbina/get/filter?${params.toString()}`, {
+            const response = await fetch(`http://127.0.0.1:8080/api/v1/porudzbina/get/filter?${params.toString()}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
