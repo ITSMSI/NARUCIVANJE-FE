@@ -1,0 +1,46 @@
+/* U vašem CSS fajlu, npr. App.css ili Table.css */
+.selected-row td {
+    background-color: #CDDFD0 !important;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5); 
+    backdrop-filter: blur(15px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+
+.modal-content {
+    background: #486F5B;
+    padding: 20px;
+    border-radius: 10px;
+    width: 90%; /* 🟢 Modal zauzima do 90% širine ekrana */
+    width: 400px;
+    max-height: 90vh; /* 🔥 Sprečava da modal bude prevelik */
+    overflow-y: auto; /* 🛠 Omogućava skrolovanje ako sadržaj ne stane */
+    position: relative;
+    z-index: 1051; /* ✅ Osigurava da je modal iznad svega */
+}
+
+input[type="checkbox"] {
+  transform: scale(1.5); /* ✅ Povećava checkbox */
+  accent-color: #CDDFD0; /* ✅ Menja boju checkbox-a */
+}
+
+label {
+    font-family: "Montserrat";
+    font-size: 16px;
+    color: white;  /* ✅ Menja boju slova */
+    cursor: pointer;
+}
+
+
+
+
