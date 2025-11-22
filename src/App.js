@@ -27,7 +27,6 @@ function App() {
     if (savedRole) {
       setUserRole(savedRole);
     } else if (token) {
-      // Fallback – ako nema sačuvane role, probaj da dekoduješ
       try {
         const decoded = jwtDecode(token);
         const role = decoded.role || "";
@@ -59,16 +58,16 @@ function App() {
           <Route path="/login" element={<LoginPage updateToken={updateToken} />} />
           <Route path="/lozinka" element={<LozinkaPage />} />
           <Route path="/reset-password" element={<PromenaLozinke />} />
-          <Route path="/meni" element={<ProtectedRoute allowedRoles={['ROLE_USER']} userRole={userRole}><MeniPage /></ProtectedRoute>} />
-          <Route path="/pregled" element={<ProtectedRoute allowedRoles={['ROLE_USER']} userRole={userRole}><PregledPage /></ProtectedRoute>} />
-          
-          <Route path="/admin" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminPregled /></ProtectedRoute>} />
-          <Route path="/admin/meniji" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminMeniji /></ProtectedRoute>} />
-          <Route path="/admin/obroci" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminObroci /></ProtectedRoute>} />
-          <Route path="/admin/role" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminRole /></ProtectedRoute>} />
-          <Route path="/admin/korisnici" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminKorisnici /></ProtectedRoute>} />
-          <Route path="/admin/lokacije" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminLokacije /></ProtectedRoute>} />
-          <Route path="/admin/kompanije" element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} userRole={userRole}><AdminKompanije /></ProtectedRoute>} />
+          <Route path="/meni" element={<ProtectedRoute allowedRoles={["ROLE_USER"]} userRole={userRole}><MeniPage /></ProtectedRoute>} />
+          <Route path="/pregled" element={<ProtectedRoute allowedRoles={["ROLE_USER"]} userRole={userRole}><PregledPage /></ProtectedRoute>} />
+
+          <Route path="/admin" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminPregled /></ProtectedRoute>} />
+          <Route path="/admin/meniji" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminMeniji /></ProtectedRoute>} />
+          <Route path="/admin/obroci" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminObroci /></ProtectedRoute>} />
+          <Route path="/admin/role" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminRole /></ProtectedRoute>} />
+          <Route path="/admin/korisnici" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminKorisnici /></ProtectedRoute>} />
+          <Route path="/admin/lokacije" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminLokacije /></ProtectedRoute>} />
+          <Route path="/admin/kompanije" element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} userRole={userRole}><AdminKompanije /></ProtectedRoute>} />
 
           <Route path="/not-authorized" element={<NotAuthorizedPage />} />
           <Route path="*" element={<NePostojiPage />} />

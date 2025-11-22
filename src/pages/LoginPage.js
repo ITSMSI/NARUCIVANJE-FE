@@ -38,15 +38,15 @@ const LoginPage = ({ updateToken }) => {
 
       if (response.ok) {
         const token = data.accessToken;
-        const role = data.role; // ← backend već vraća role direktno!
+        const role = data.role || "ROLE_USER";
 
-        // Brišemo sve staro
+        // OVO JE KLJUČNO – čistimo sve staro i čuvamo tačno ono što treba
         localStorage.clear();
         localStorage.setItem("token", token);
-        localStorage.setItem("role", data.role);   
+        localStorage.setItem("role", role);        // ← OVO SMO DODALI
         updateToken(token);
 
-        // Koristimo role iz odgovora – ne dekodiramo token uopšte!
+        // Odmah idemo gde treba
         if (role === "ROLE_ADMIN") {
           navigate("/admin");
         } else {
@@ -63,7 +63,10 @@ const LoginPage = ({ updateToken }) => {
   return (
     <div className="vh-100 d-flex">
       <div className="col-md-5 d-none d-md-block">
-        <div className="h-100 bg-white opacity-75" style={{ backgroundImage: "url('/slike/login.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}></div>
+        <div
+          className="h-100 bg-white opacity-75"
+          style={{ backgroundImage: "url('/slike/login.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}
+        ></div>
       </div>
 
       <div className="col-md-7 d-flex align-items-center justify-content-center">
@@ -83,28 +86,47 @@ const LoginPage = ({ updateToken }) => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3 mt-4">
-              <input type="email" className="form-control" placeholder="Unesite vaš email"
+              <input
+                type="email"
+                className="form-control"
+                placeholder="Unesite vaš email"
                 style={{ fontFamily: "Montserrat", fontSize: 14, height: 41 }}
-                value={email} onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               {emailError && <div className="text-danger">{emailError}</div>}
             </div>
             <div className="mb-3">
-              <input type="password" className="form-control" placeholder="Unesite vašu lozinku"
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Unesite vašu lozinku"
                 style={{ fontFamily: "Montserrat", fontSize: 14, height: 41 }}
-                value={password} onChange={(e) => setPassword(e.target.value)}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               {poljaError && <div className="text-danger">{poljaError}</div>}
             </div>
-            <button type="submit" className="btn w-100 mb-5 fw-bold"
-              style={{ backgroundColor: "#486F5B", color: "white", fontFamily: "Montserrat", fontSize: 18 }}>
+            <button
+              type="submit"
+              className="btn w-100 mb-5 fw-bold"
+              style={{ backgroundColor: "#486F5B", color: "white", fontFamily: "Montserrat", fontSize: 18 }}
+            >
               Prijavi se
             </button>
-            {errorMessage && <div className="alert alert-danger mt-3"><strong>Greška: </strong>{errorMessage}</div>}
+            {errorMessage && (
+              <div className="alert alert-danger mt-3">
+                <strong>Greška: </strong>
+                {errorMessage}
+              </div>
+            )}
           </form>
 
-          <button onClick={() => navigate("/")} className="btn w-100 p-0 fw-bold mt-5"
-            style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }}>
+          <button
+            onClick={() => navigate("/")}
+            className="btn w-100 p-0 fw-bold mt-5"
+            style={{ color: "#486F5B", fontFamily: "Montserrat", fontSize: 18, background: "none", border: "none" }}
+          >
             ← Vrati se na početnu stranicu
           </button>
         </div>
