@@ -1,33 +1,26 @@
-
 import "bootstrap/dist/css/bootstrap.min.css";
-import React, { useState } from "react"; // Importuj useState
+import React, { useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom"; // Importuj useNavigate
+import { useNavigate } from "react-router-dom";
 
-
-const LoginPage = ({updateToken}) => {
+const LoginPage = ({ updateToken }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [poljaError, setPoljaError] = useState("");
-  const [emailError, setEmailError] = useState(""); // Za email grešku
+  const [emailError, setEmailError] = useState("");
 
-  // Inicijalizacija navigate funkcije
   const navigate = useNavigate();
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // Regularni izraz za validaciju emaila
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-
-  // Funkcija koja se poziva kada se forma pošalje
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Sprečava podrazumevano ponašanje forme
+    e.preventDefault();
 
-    // Resetovanje grešaka
     setEmailError("");
     setErrorMessage("");
     setPoljaError("");
 
-    // Validacija emaila
     if (!email.match(emailRegex)) {
       setEmailError("Unesite validnu email adresu.");
       return;
@@ -38,43 +31,51 @@ const LoginPage = ({updateToken}) => {
       return;
     }
 
-    const userData = {
-      email: email,
-      password: password,
-    };
+    const userData = { email, password };
 
     try {
-      // Slanje POST zahteva ka backendu
-      const response = await fetch("https://www.naruci.co.rs/auth/login", {
+      // FIXED #1: correct endpoint (your backend has /api/auth/login)
+      const response = await fetch("https://www.naruci.co.rs/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json", },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
+      const data = await response.json();
 
-        updateToken(data.token);
-        const decodedToken = jwtDecode(data.token);
-        // Preusmeravanje korisnika na stranicu za naručivanje
-        if (decodedToken.role === "ROLE_ADMIN") {
+      if (response.ok) {
+        // FIXED #2: your new backend returns { token: "eyJ..." }
+        const token = data.token;
+
+        // Save token the way your app expects
+        localStorage.setItem("token", token);
+        updateToken(token);                     // your original prop
+        // FIXED #3: safe jwt decode – no crash even if token is malformed
+        let decodedToken;
+        try {
+          decodedToken = jwtDecode(token);
+        } catch (err) {
+          console.warn("Token decode failed (will use default route)", err);
+          decodedToken = { role: "ROLE_USER" }; // fallback
+        }
+
+        // FIXED #4: role name exactly as backend sends it
+        if (decodedToken.role === "ROLE_ADMIN" || decodedToken.role === "ADMIN") {
           navigate("/admin");
         } else {
           navigate("/meni");
         }
       } else {
-        const data = await response.json();
-        setErrorMessage(data.message || "Došlo je do greške pri prijavljivanju."); // Ako nije uspešno, postavi grešku
+        setErrorMessage(data.message || data.error || "Pogrešni podaci za prijavu.");
       }
     } catch (error) {
       console.error("Greška prilikom slanja:", error);
-      setErrorMessage("Vaš nalog trenutno nije aktivan.");
+      setErrorMessage("Vaš nalog trenutno nije aktivan ili je došlo do greške.");
     }
   };
 
-
   return (
-    <div className=" vh-100 d-flex">
+    <div className="vh-100 d-flex">
       {/* Leva strana */}
       <div className="col-md-5 d-none d-md-block">
         <div
@@ -141,8 +142,6 @@ const LoginPage = ({updateToken}) => {
           </button>
         </div>
       </div>
-
-
     </div>
   );
 };
