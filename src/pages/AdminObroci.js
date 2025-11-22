@@ -24,7 +24,7 @@ const AdminObroci = () => {
                 console.error("Nema tokena, preusmeravanje na login...");
                 return;
             }
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/get/all", {
+            const response = await fetch("https://naruci.co.rs/api/v1/obrok/get/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -37,7 +37,7 @@ const AdminObroci = () => {
             const formattedData = result.map(obrok => ({
                 id: obrok.id,
                 naziv: obrok.naziv,
-                slika: <img src={`https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/image/${obrok.id}?t=${new Date().getTime()}`}
+                slika: <img src={`https://naruci.co.rs/api/v1/obrok/image/${obrok.id}?t=${new Date().getTime()}`}
                     alt="Slika obroka" style={{ width: 45, height: 45, objectFit: "cover", borderRadius: "5px" }} />,
                 opis: obrok.opis,
                 status: obrok.status ? "aktivan" : "neaktivan",
@@ -65,7 +65,7 @@ const AdminObroci = () => {
         const newStatus = selectedObrok.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/update/${selectedObrok.id}`, {
+            await fetch(`https://naruci.co.rs/api/v1/obrok/update/${selectedObrok.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -130,8 +130,8 @@ const AdminObroci = () => {
 
         const method = editMode ? "PUT" : "POST";
         const url = editMode
-            ? `https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/update/${selectedObrok.id}`
-            : "https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/create";
+            ? `https://naruci.co.rs/api/v1/obrok/update/${selectedObrok.id}`
+            : "https://naruci.co.rs/api/v1/obrok/create";
 
         try {
             // **Prvi korak**: Kreiramo obrok BEZ slike (ako postoji)
@@ -158,7 +158,7 @@ const AdminObroci = () => {
                 const formData = new FormData();
                 formData.append("file", obrokForm.slika);
 
-                const slikaResp=await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/upload-image/${obrokData.id}`, {
+                const slikaResp=await fetch(`https://naruci.co.rs/api/v1/obrok/upload-image/${obrokData.id}`, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${token}`

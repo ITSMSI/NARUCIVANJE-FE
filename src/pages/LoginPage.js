@@ -45,7 +45,7 @@ const LoginPage = ({updateToken}) => {
 
     try {
       // Slanje POST zahteva ka backendu
-      const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/auth/login", {
+      const response = await fetch("https://naruci.co.rs/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json", },
         body: JSON.stringify(userData),

@@ -36,7 +36,7 @@ const AdminKorisnici = () => {
                 console.error("Nema tokena, preusmeravanje na login...");
                 return;
             }
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/user/get/all", {
+            const response = await fetch("https://naruci.co.rs/api/v1/user/get/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -66,7 +66,7 @@ const AdminKorisnici = () => {
     // Fetch kompanija, lokacija i rola
     const fetchCompanies = async () => {
         try {
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/kompanija/get/all", {
+            const response = await fetch("https://naruci.co.rs/api/v1/kompanija/get/all", {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             if (!response.ok) throw new Error("Greška pri učitavanju kompanija");
@@ -79,7 +79,7 @@ const AdminKorisnici = () => {
 
     const fetchRoles = async () => {
         try {
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/role/get/all", {
+            const response = await fetch("https://naruci.co.rs/api/v1/role/get/all", {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             if (!response.ok) throw new Error("Greška pri učitavanju rola");
@@ -92,7 +92,7 @@ const AdminKorisnici = () => {
 
     const fetchLocationsByCompany = async (kompanijaId) => {
         try {
-            const response = await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/lokacija/get/kompanija/${kompanijaId}`, {
+            const response = await fetch(`https://naruci.co.rs/api/v1/lokacija/get/kompanija/${kompanijaId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             if (!response.ok) throw new Error("Greška pri učitavanju lokacija");
@@ -128,7 +128,7 @@ const AdminKorisnici = () => {
         const newStatus = selectedUser.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/user/update/${selectedUser.id}`, {
+            await fetch(`https://naruci.co.rs/api/v1/user/update/${selectedUser.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -208,8 +208,8 @@ const AdminKorisnici = () => {
 
         const method = editMode ? "PUT" : "POST";
         const url = editMode
-            ? `https://narucivanje-back.naruci.co.rs:8443/api/v1/user/update/${selectedUser.id}`
-            : "https://narucivanje-back.naruci.co.rs:8443/auth/register";
+            ? `https://naruci.co.rs/api/v1/user/update/${selectedUser.id}`
+            : "https://naruci.co.rs/auth/register";
 
         const requestBody = {
             ...userForm,

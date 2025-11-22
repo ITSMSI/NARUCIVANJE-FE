@@ -29,7 +29,7 @@ const AdminLokacije = () => {
                 console.error("Nema tokena, preusmeravanje na login...");
                 return;
             }
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/lokacija/get/all", {
+            const response = await fetch("https://naruci.co.rs/api/v1/lokacija/get/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const AdminLokacije = () => {
 
     const fetchCompanies = async () => {
         try {
-            const compResponse = await fetch("https://narucivanje-back.naruci.co.rs:8443/api/v1/kompanija/get/all", {
+            const compResponse = await fetch("https://naruci.co.rs/api/v1/kompanija/get/all", {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             if (!compResponse.ok) throw new Error("Greška pri učitavanju lokacija/rola");
@@ -84,7 +84,7 @@ const AdminLokacije = () => {
         const newStatus = selectedLok.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/lokacija/update/${selectedLok.id}`, {
+            await fetch(`https://naruci.co.rs/api/v1/lokacija/update/${selectedLok.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -148,8 +148,8 @@ const AdminLokacije = () => {
 
         const method = editMode ? "PUT" : "POST";
         const url = editMode
-            ? `https://narucivanje-back.naruci.co.rs:8443/api/v1/lokacija/update/${selectedLok.id}`
-            : "https://narucivanje-back.naruci.co.rs:8443/api/v1/lokacija/create";
+            ? `https://naruci.co.rs/api/v1/lokacija/update/${selectedLok.id}`
+            : "https://naruci.co.rs/api/v1/lokacija/create";
 
         const requestBody = {
             adresa: lokForm.adresa,

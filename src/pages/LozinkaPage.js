@@ -32,7 +32,7 @@ const LozinkaPage = () => {
         try {
             setIsSubmitting(true);
             // Slanje POST zahteva ka backendu
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/auth/forgot-password", {
+            const response = await fetch("https://naruci.co.rs/auth/forgot-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData),

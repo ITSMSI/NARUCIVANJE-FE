@@ -51,7 +51,7 @@ const PromenaLozinke = () => {
 
         try {
             // Slanje POST zahteva ka backendu
-            const response = await fetch("https://narucivanje-back.naruci.co.rs:8443/auth/reset-password", {
+            const response = await fetch("https://naruci.co.rs/auth/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json", },
                 body: JSON.stringify(userData),

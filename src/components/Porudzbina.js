@@ -10,7 +10,7 @@ const Porudzbina = ({ porudzbina }) => {
 
     // Use the correct properties based on your API response
     const slikaUrl = porudzbina.obrokId
-        ? `https://narucivanje-back.naruci.co.rs:8443/api/v1/obrok/image/${porudzbina.obrokId}`
+        ? `https://naruci.co.rs/api/v1/obrok/image/${porudzbina.obrokId}`
         : defaultImage;
 
     return (

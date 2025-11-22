@@ -45,7 +45,7 @@ const PregledPage = () => {
         const formattedEndDate = formatDate(endDate);
 
         try {
-            const response = await fetch(`https://narucivanje-back.naruci.co.rs:8443/api/v1/porudzbina/get/user/${decodedToken.id}/date-range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`, {
+            const response = await fetch(`https://naruci.co.rs/api/v1/porudzbina/get/user/${decodedToken.id}/date-range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
