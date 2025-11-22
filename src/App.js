@@ -22,22 +22,26 @@ function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [userRole, setUserRole] = useState("");
 
-  useEffect(() => {
-    if (token) {
+useEffect(() => {
+  if (token) {
+    // Prvo uzimamo rolu iz localStorage (koju smo upravo sačuvali)
+    const savedRole = localStorage.getItem("role");
+    if (savedRole) {
+      setUserRole(savedRole);
+    } else {
+      // Ako nema sačuvane role, pokušavamo da dekodujemo (fallback)
       try {
-        // THIS IS THE ONLY CHANGE – safe jwtDecode with try/catch
         const decodedToken = jwtDecode(token);
         setUserRole(decodedToken.role || "");
+        localStorage.setItem("role", decodedToken.role || ""); // čuvamo za sledeći put
       } catch (error) {
-        console.warn("Invalid or corrupted token – clearing it", error);
-        localStorage.removeItem("token");
-        setToken(null);
         setUserRole("");
       }
-    } else {
-      setUserRole("");
     }
-  }, [token]);
+  } else {
+    setUserRole("");
+  }
+}, [token]);
 
   const updateToken = (newToken) => {
     if (newToken) {

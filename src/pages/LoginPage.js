@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React, { useState } from "react";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
 const LoginPage = ({ updateToken }) => {
@@ -38,24 +37,16 @@ const LoginPage = ({ updateToken }) => {
       const data = await response.json();
 
       if (response.ok) {
-        // OVDE JE KLJUČ – backend vraća accessToken!
         const token = data.accessToken;
+        const role = data.role; // ← backend već vraća role direktno!
 
-        // Brišemo sve staro i čuvamo samo ispravan token
+        // Brišemo sve staro
         localStorage.clear();
         localStorage.setItem("token", token);
+        localStorage.setItem("role", data.role);   
         updateToken(token);
 
-        // Sigurno dekodiranje
-        let role = "ROLE_USER";
-        try {
-          const decoded = jwtDecode(token);
-          role = decoded.role || "ROLE_USER";
-        } catch (err) {
-          console.warn("Token ne može da se dekodira – koristimo fallback");
-        }
-
-        // Redirekcija
+        // Koristimo role iz odgovora – ne dekodiramo token uopšte!
         if (role === "ROLE_ADMIN") {
           navigate("/admin");
         } else {
