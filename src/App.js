@@ -19,35 +19,34 @@ import NePostojiPage from "./pages/NePostojiPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [userRole, setUserRole] = useState("");
 
-useEffect(() => {
-  if (token) {
-    // Prvo uzimamo rolu iz localStorage (koju smo upravo sačuvali)
+  useEffect(() => {
     const savedRole = localStorage.getItem("role");
     if (savedRole) {
       setUserRole(savedRole);
-    } else {
-      // Ako nema sačuvane role, pokušavamo da dekodujemo (fallback)
+    } else if (token) {
+      // Fallback – ako nema sačuvane role, probaj da dekoduješ
       try {
-        const decodedToken = jwtDecode(token);
-        setUserRole(decodedToken.role || "");
-        localStorage.setItem("role", decodedToken.role || ""); // čuvamo za sledeći put
-      } catch (error) {
+        const decoded = jwtDecode(token);
+        const role = decoded.role || "";
+        setUserRole(role);
+        localStorage.setItem("role", role);
+      } catch (e) {
         setUserRole("");
       }
+    } else {
+      setUserRole("");
     }
-  } else {
-    setUserRole("");
-  }
-}, [token]);
+  }, [token]);
 
   const updateToken = (newToken) => {
     if (newToken) {
       localStorage.setItem("token", newToken);
     } else {
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
     }
     setToken(newToken);
   };
