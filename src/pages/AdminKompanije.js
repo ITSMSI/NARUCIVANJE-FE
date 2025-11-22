@@ -28,7 +28,7 @@ const AdminKompanije = () => {
                 console.error("Nema tokena, preusmeravanje na login...");
                 return;
             }
-            const response = await fetch("http://127.0.0.1:8080/api/v1/kompanija/get/all", {
+            const response = await fetch("https://www.naruci.co.rs/api/v1/kompanija/get/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const AdminKompanije = () => {
         const newStatus = selectedComp.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`http://127.0.0.1:8080/api/v1/kompanija/update/${selectedComp.id}`, {
+            await fetch(`https://www.naruci.co.rs/api/v1/kompanija/update/${selectedComp.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -132,8 +132,8 @@ const AdminKompanije = () => {
 
         const method = editMode ? "PUT" : "POST";
         const url = editMode
-            ? `http://127.0.0.1:8080/api/v1/kompanija/update/${selectedComp.id}`
-            : "http://127.0.0.1:8080/api/v1/kompanija/create";
+            ? `https://www.naruci.co.rs/api/v1/kompanija/update/${selectedComp.id}`
+            : "https://www.naruci.co.rs/api/v1/kompanija/create";
 
         const requestBody = {
             ...compForm,

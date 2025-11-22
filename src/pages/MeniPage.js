@@ -39,7 +39,7 @@ const MeniPage = () => {
     const fetchMeni = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:8080/api/v1/meni/get/datum?datum=${selectedDate}`,
+                `https://www.naruci.co.rs/api/v1/meni/get/datum?datum=${selectedDate}`,
                 {
                     method: "GET",
                     headers: {
@@ -62,7 +62,7 @@ const MeniPage = () => {
                 // Extract the "obroci" from each menu and flatten them into one array
                 const sviObroci = active.flatMap((meni) => meni.obroci || []).map((obrok) => ({
                     ...obrok,
-                    slikaUrl: `http://127.0.0.1:8080/api/v1/obrok/image/${obrok.id}`, // Generišemo URL do slike
+                    slikaUrl: `https://www.naruci.co.rs/api/v1/obrok/image/${obrok.id}`, // Generišemo URL do slike
                 }));
                 setObroci(sviObroci);
                 setMeniDostupan(sviObroci.length > 0);
@@ -76,7 +76,7 @@ const MeniPage = () => {
     const fetchPorudzbina = async () => {
         try {
             const response = await fetch(
-                `http://127.0.0.1:8080/api/v1/porudzbina/get/user/${decodedToken.id}/date-range?startDate=${selectedDate}&endDate=${selectedDate}`,
+                `https://www.naruci.co.rs/api/v1/porudzbina/get/user/${decodedToken.id}/date-range?startDate=${selectedDate}&endDate=${selectedDate}`,
                 {
                     method: "GET",
                     headers: {
@@ -103,7 +103,7 @@ const MeniPage = () => {
 
         if (porudzbina) {
             await fetch(
-                `http://127.0.0.1:8080/api/v1/porudzbina/update/${porudzbina.id}`,
+                `https://www.naruci.co.rs/api/v1/porudzbina/update/${porudzbina.id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -118,7 +118,7 @@ const MeniPage = () => {
                 }
             );
         } else {
-            await fetch("http://127.0.0.1:8080/api/v1/porudzbina/create", {
+            await fetch("https://www.naruci.co.rs/api/v1/porudzbina/create", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -139,7 +139,7 @@ const MeniPage = () => {
         if (porudzbina.status === false) return;
 
         await fetch(
-            `http://127.0.0.1:8080/api/v1/porudzbina/remove/${porudzbina.id}`,
+            `https://www.naruci.co.rs/api/v1/porudzbina/remove/${porudzbina.id}`,
             {
                 method: "PUT",
                 headers: {

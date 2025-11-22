@@ -65,7 +65,7 @@ const AdminMeniji = () => {
 
         try {
 
-            const response = await fetch(`http://127.0.0.1:8080/api/v1/meni/get/date-range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`, {
+            const response = await fetch(`https://www.naruci.co.rs/api/v1/meni/get/date-range?startDate=${formattedStartDate}&endDate=${formattedEndDate}`, {
                 method: "GET",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -94,7 +94,7 @@ const AdminMeniji = () => {
 
     const fetchObroci = async () => {
         try {
-            const response = await fetch("http://127.0.0.1:8080/api/v1/obrok/get/all", {
+            const response = await fetch("https://www.naruci.co.rs/api/v1/obrok/get/all", {
                 headers: { "Authorization": `Bearer ${token}` }
             });
 
@@ -155,8 +155,8 @@ const AdminMeniji = () => {
             let meniId = selectedMeni?.id;
             let method = editMode ? "PUT" : "POST";
             let url = editMode
-                ? `http://127.0.0.1:8080/api/v1/meni/update/${meniId}`
-                : "http://127.0.0.1:8080/api/v1/meni/create";
+                ? `https://www.naruci.co.rs/api/v1/meni/update/${meniId}`
+                : "https://www.naruci.co.rs/api/v1/meni/create";
 
             // **Prvi korak**: Kreiramo ili ažuriramo meni BEZ obroka
             const meniResponse = await fetch(url, {
@@ -187,7 +187,7 @@ const AdminMeniji = () => {
 
             // **Drugi korak**: Dodajemo obroke u meni
             const obrociIds = [...meniForm.obroci].map(obrok => obrok.id);
-            const obrokUrl = `http://127.0.0.1:8080/api/v1/meni/${meniId}/add-obroks`;
+            const obrokUrl = `https://www.naruci.co.rs/api/v1/meni/${meniId}/add-obroks`;
 
             await fetch(obrokUrl, {
                 method: "POST",
@@ -213,7 +213,7 @@ const AdminMeniji = () => {
     const handleRemoveObrok = async (obrok) => {
         if (!selectedMeni) return;
         try {
-            const response = await fetch(`http://127.0.0.1:8080/api/v1/meni/${selectedMeni.id}/remove-obrok/${obrok.id}`, {
+            const response = await fetch(`https://www.naruci.co.rs/api/v1/meni/${selectedMeni.id}/remove-obrok/${obrok.id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -236,7 +236,7 @@ const AdminMeniji = () => {
         const newStatus = selectedMeni.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`http://127.0.0.1:8080/api/v1/meni/update/${selectedMeni.id}`, {
+            await fetch(`https://www.naruci.co.rs/api/v1/meni/update/${selectedMeni.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

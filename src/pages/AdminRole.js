@@ -36,7 +36,7 @@ const AdminRole = () => {
                 console.error("Nema tokena, preusmeravanje na login...");
                 return;
             }
-            const response = await fetch("http://127.0.0.1:8080/api/v1/role/get/all", {
+            const response = await fetch("https://www.naruci.co.rs/api/v1/role/get/all", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -84,7 +84,7 @@ const AdminRole = () => {
         const newStatus = selectedRole.status === "aktivan" ? false : true;
 
         try {
-            await fetch(`http://127.0.0.1:8080/api/v1/role/update/${selectedRole.id}`, {
+            await fetch(`https://www.naruci.co.rs/api/v1/role/update/${selectedRole.id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -158,8 +158,8 @@ const AdminRole = () => {
 
         const method = editMode ? "PUT" : "POST";
         const url = editMode
-            ? `http://127.0.0.1:8080/api/v1/role/update/${selectedRole.id}`
-            : "http://127.0.0.1:8080/api/v1/role/create";
+            ? `https://www.naruci.co.rs/api/v1/role/update/${selectedRole.id}`
+            : "https://www.naruci.co.rs/api/v1/role/create";
 
         // 🛠 Pravimo objekat sa podacima
         let requestBody = {
